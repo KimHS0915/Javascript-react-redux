@@ -12,47 +12,122 @@
   ></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="text/babel">
-    const root = document.querySelector("#root");
-    const KmToMiles = () => {
-      return <h3></h3>;
+    const roundToThree = (float) => {
+      return +(Math.round(float + "e+3") + "e-3");
     };
+    const root = document.querySelector("#root");
     const MinutesToHours = () => {
+      const RATIO = 60;
       const [amount, setAmount] = React.useState(0);
-      const [flipped, setFlipped] = React.useState(false);
+      const [selected, setSelected] = React.useState(1);
       const onChange = (event) => {
+        if (!event.target.value) {
+          return setAmount(0);
+        }
         setAmount(event.target.value);
       };
       const reset = () => setAmount(0);
-      const onFlip = () => {
+      const onSelect = () => {
         reset();
-        setFlipped((current) => !current);
+        const newSelected = selected + 1 > 2 ? 0 : selected + 1;
+        setSelected(newSelected);
+      };
+      const secondsValue = {
+        0: amount,
+        1: amount * RATIO,
+        2: amount * RATIO * RATIO,
+      };
+      const minutesValue = {
+        0: roundToThree(amount / RATIO),
+        1: amount,
+        2: amount * RATIO,
+      };
+      const hoursValue = {
+        0: roundToThree(amount / RATIO / RATIO),
+        1: roundToThree(amount / RATIO),
+        2: amount,
       };
       return (
         <div>
           <div>
+            <label htmlFor="seconds">Seconds</label>
+            <input
+              value={secondsValue[selected]}
+              id="seconds"
+              type="number"
+              placeholder="Seconds"
+              onChange={onChange}
+              disabled={selected === 0 ? false : true}
+            />
+          </div>
+          <div>
             <label htmlFor="minutes">Minutes</label>
             <input
-              value={flipped ? amount * 60 : amount}
+              value={minutesValue[selected]}
               id="minutes"
               type="number"
               placeholder="Minutes"
               onChange={onChange}
-              disabled={flipped}
+              disabled={selected === 1 ? false : true}
             />
           </div>
           <div>
             <label htmlFor="hours">Hours</label>
             <input
-              value={flipped ? amount : Math.round(amount / 60)}
+              value={hoursValue[selected]}
               id="hours"
               type="number"
               placeholder="Hours"
               onChange={onChange}
-              disabled={!flipped}
+              disabled={selected === 2 ? false : true}
             />
           </div>
           <button onClick={reset}>Reset</button>
-          <button onClick={onFlip}>Flip</button>
+          <button onClick={onSelect}>Select</button>
+        </div>
+      );
+    };
+    const KilometersToMiles = () => {
+      const RATIO = 1.609344;
+      const [amount, setAmount] = React.useState(0);
+      const [selected, setSelected] = React.useState(false);
+      const onChange = (event) => {
+        if (!event.target.value) {
+          return setAmount(0);
+        }
+        setAmount(event.target.value);
+      };
+      const reset = () => setAmount(0);
+      const onSelect = () => {
+        reset();
+        setSelected((current) => !current);
+      };
+      return (
+        <div>
+          <div>
+            <label htmlFor="kilometers">Kilometers</label>
+            <input
+              value={selected ? roundToThree(amount * RATIO) : amount}
+              id="kilometers"
+              type="number"
+              placeholder="Kilometers"
+              onChange={onChange}
+              disabled={selected}
+            />
+          </div>
+          <div>
+            <label htmlFor="miles">Miles</label>
+            <input
+              value={selected ? amount : roundToThree(amount / RATIO)}
+              id="miles"
+              type="number"
+              placeholder="Miles"
+              onChange={onChange}
+              disabled={!selected}
+            />
+          </div>
+          <button onClick={reset}>Reset</button>
+          <button onClick={onSelect}>Select</button>
         </div>
       );
     };
@@ -66,11 +141,11 @@
           <h1>Converter</h1>
           <select value={index} onChange={onSelect}>
             <option value="0">Select Converter</option>
-            <option value="1">Minutes & Hours</option>
-            <option value="2">Km & Miles</option>
+            <option value="1">Seconds & Minutes & Hours</option>
+            <option value="2">Kilometers & Miles</option>
           </select>
           {index === "1" ? <MinutesToHours /> : null}
-          {index === "2" ? <KmToMiles /> : null}
+          {index === "2" ? <KilometersToMiles /> : null}
         </div>
       );
     };
