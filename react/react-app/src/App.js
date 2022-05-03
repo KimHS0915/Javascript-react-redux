@@ -1,11 +1,9 @@
-import ToDo from "./ToDo";
-import CoinTracker from "./CoinTracker";
+import MovieList from "./MovieList";
 
 function App() {
   return (
     <div>
-      <ToDo />
-      <CoinTracker />
+      <MovieList />
     </div>
   );
 }
