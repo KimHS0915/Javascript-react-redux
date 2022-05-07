@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-const Detail = () => {
+const MovieDetail = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [movie, setMovie] = useState();
@@ -41,4 +41,4 @@ const Detail = () => {
   );
 };
 
-export default Detail;
+export default MovieDetail;

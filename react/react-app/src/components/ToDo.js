@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Quotes from "./Quotes";
 
 const ToDo = () => {
   const [toDo, setToDo] = useState("");
@@ -15,6 +16,7 @@ const ToDo = () => {
   return (
     <div>
       <h1>My To Dos ({toDos.length})</h1>
+      <Quotes />
       <form onSubmit={onSubmit}>
         <input
           onChange={onChange}
