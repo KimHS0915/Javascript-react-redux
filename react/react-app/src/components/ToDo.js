@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Clock from "./Clock";
 import Quotes from "./Quotes";
 
 const ToDo = () => {
@@ -15,6 +16,7 @@ const ToDo = () => {
   };
   return (
     <div>
+      <Clock />
       <h1>My To Dos ({toDos.length})</h1>
       <Quotes />
       <form onSubmit={onSubmit}>

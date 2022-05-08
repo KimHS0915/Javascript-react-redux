@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 const CoinTracker = () => {
+  const COIN_API = process.env.REACT_APP_COIN_API;
   const [loading, setLoading] = useState(true);
   const [coins, setCoins] = useState([]);
   const [money, setMoney] = useState(0);
@@ -15,7 +16,7 @@ const CoinTracker = () => {
     setInfo(event.target.value.split(","));
   };
   useEffect(() => {
-    fetch("https://api.coinpaprika.com/v1/tickers?limit=20")
+    fetch(`${COIN_API}?limit=20`)
       .then((response) => response.json())
       .then((json) => {
         setCoins(json);
