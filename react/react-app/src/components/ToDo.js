@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Clock from "./Clock";
 import Quotes from "./Quotes";
+import Weather from "./Weather";
 
 const ToDo = () => {
   const [toDo, setToDo] = useState("");
@@ -34,6 +35,7 @@ const ToDo = () => {
           <li key={index}>{item}</li>
         ))}
       </ul>
+      <Weather />
     </div>
   );
 };
