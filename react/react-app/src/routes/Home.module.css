@@ -1,0 +1,11 @@
+.home {
+  padding: 5%;
+  display: flex;
+}
+
+.home div {
+  padding-right: 20px;
+  margin-right: 15px;
+  font-size: large;
+  font-weight: 400;
+}

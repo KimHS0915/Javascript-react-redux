@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import styles from "./Quotes.module.css";
 
 const Quotes = () => {
   const QUOTE_API = process.env.REACT_APP_QUOTE_API;
@@ -14,9 +15,10 @@ const Quotes = () => {
     getQuote();
   }, []);
   return (
-    <div>
+    <div className={styles.quote}>
       <p>
-        {content} - {author}
+        <span className={styles.content}>{content}</span>
+        <span className={styles.author}> - {author}</span>
       </p>
     </div>
   );

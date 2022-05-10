@@ -1,0 +1,13 @@
+.quote {
+  text-align: center;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.content {
+  font-size: x-small;
+}
+
+.author {
+  font-size: small;
+}

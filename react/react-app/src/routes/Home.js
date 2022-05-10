@@ -1,17 +1,18 @@
 import { Link } from "react-router-dom";
+import styles from "./Home.module.css";
 
 const Home = () => {
   return (
-    <div>
-      <h3>
+    <div className={styles.home}>
+      <div className={styles.homeBtn}>
         <Link to={`/movies/`}>Movies</Link>
-      </h3>
-      <h3>
+      </div>
+      <div className={styles.homeBtn}>
         <Link to={`/todo/`}>To Do List</Link>
-      </h3>
-      <h3>
+      </div>
+      <div className={styles.homeBtn}>
         <Link to={`/tracker/`}>Coin Tracker</Link>
-      </h3>
+      </div>
     </div>
   );
 };

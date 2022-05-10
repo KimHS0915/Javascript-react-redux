@@ -36,7 +36,7 @@ const Weather = () => {
     }
   }, [latitude]);
   return (
-    <div>
+    <div className={styles.container}>
       <span className={styles.city}>{city ? city : "Loading..."}</span>
       <span className={styles.weather}>{weather ? weather : null}</span>
       <span className={styles.temp}>{temp ? `${temp}°C` : null}</span>

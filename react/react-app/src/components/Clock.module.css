@@ -1,6 +1,9 @@
 .clock {
   text-align: right;
-  padding-top: 1%;
-  padding-right: 5%;
+  padding: 10px;
   font-size: larger;
+  font-weight: 100;
+  position: fixed;
+  right: 0;
+  top: 0;
 }
