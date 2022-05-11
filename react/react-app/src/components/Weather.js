@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "./Weather.module.css";
 
 const Weather = () => {
@@ -16,25 +16,25 @@ const Weather = () => {
   const onGeoError = () => {
     alert("Error. Can't find your position");
   };
-  const getWeather = async () => {
+  const getWeather = useCallback(async () => {
     const url = `${API_URL}?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`;
     const response = await fetch(url);
     const json = await response.json();
     setWeather(json.weather[0].main);
     setTemp(json.main.temp);
     setCity(json.name);
-  };
-  const getPosition = () => {
+  }, [API_URL, API_KEY, latitude, longitude]);
+  const getPosition = useCallback(() => {
     navigator.geolocation.getCurrentPosition(onGeoSucces, onGeoError);
-  };
+  }, []);
   useEffect(() => {
     getPosition();
-  }, []);
+  }, [getPosition]);
   useEffect(() => {
     if (latitude && longitude) {
       getWeather();
     }
-  }, [latitude]);
+  }, [getWeather, latitude, longitude]);
   return (
     <div className={styles.container}>
       <span className={styles.city}>{city ? city : "Loading..."}</span>

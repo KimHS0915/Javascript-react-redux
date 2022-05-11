@@ -22,7 +22,7 @@ const CoinTracker = () => {
         setCoins(json);
         setLoading(false);
       });
-  }, []);
+  }, [COIN_API]);
   return (
     <div>
       <h1>The Coin Tracker {loading ? "" : `(${coins.length} coins)`}</h1>

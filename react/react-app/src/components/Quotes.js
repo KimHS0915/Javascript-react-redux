@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "./Quotes.module.css";
 
 const Quotes = () => {
   const QUOTE_API = process.env.REACT_APP_QUOTE_API;
   const [author, setAuthor] = useState();
   const [content, setContent] = useState();
-  const getQuote = async () => {
+  const getQuote = useCallback(async () => {
     const response = await fetch(QUOTE_API);
     const json = await response.json();
     setAuthor(json.author);
     setContent(json.content);
-  };
+  }, [QUOTE_API]);
   useEffect(() => {
     getQuote();
-  }, []);
+  }, [getQuote]);
   return (
     <div className={styles.quote}>
       <p>

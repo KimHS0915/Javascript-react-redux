@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Movie from "./Movie";
 import styles from "./MovieList.module.css";
 
@@ -6,17 +6,17 @@ const MovieList = () => {
   const MOVIE_LIST_API = process.env.REACT_APP_MOVIE_LIST_API;
   const [loading, setLoading] = useState(true);
   const [movies, setMovies] = useState([]);
-  const getMovies = async () => {
+  const getMovies = useCallback(async () => {
     const response = await fetch(
       `${MOVIE_LIST_API}?minimum_rating=8.5&sort_by=year`
     );
     const json = await response.json();
     setMovies(json.data.movies);
     setLoading(false);
-  };
+  }, [MOVIE_LIST_API]);
   useEffect(() => {
     getMovies();
-  }, []);
+  }, [getMovies]);
   return (
     <div className={styles.container}>
       {loading ? (
