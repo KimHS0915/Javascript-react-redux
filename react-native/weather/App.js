@@ -8,9 +8,21 @@ import {
   ActivityIndicator,
 } from "react-native";
 import * as Location from "expo-location";
+import { StatusBar } from "expo-status-bar";
+import { Fontisto } from "@expo/vector-icons";
 
 const API_KEY = "1d7dc479625863f267b33ad299083f6b";
 const API_URL = "https://api.openweathermap.org/data/2.5/onecall";
+
+const icons = {
+  Clouds: "cloudy",
+  Clear: "day-sunny",
+  Atmosphere: "cloudy-gusts",
+  Snow: "snow",
+  Rain: "rains",
+  Drizzle: "rain",
+  Thunderstorm: "lightning",
+};
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -42,6 +54,7 @@ export default function App() {
   }, []);
   return (
     <View style={styles.container}>
+      <StatusBar />
       <View style={styles.city}>
         <Text style={styles.cityName}>{city}</Text>
       </View>
@@ -61,9 +74,16 @@ export default function App() {
               <Text style={styles.date}>
                 {new Date(day.dt * 1000).toString().substring(0, 10)}
               </Text>
-              <Text style={styles.temp}>
-                {parseFloat(day.temp.day).toFixed(1)}
-              </Text>
+              <View style={styles.tempWrapper}>
+                <Text style={styles.temp}>
+                  {parseFloat(day.temp.day).toFixed(1)}
+                </Text>
+                <Fontisto
+                  name={icons[day.weather[0].main]}
+                  size={40}
+                  color="black"
+                />
+              </View>
               <Text style={styles.mainDescription}>{day.weather[0].main}</Text>
               <Text style={styles.subDescription}>
                 {day.weather[0].description}
@@ -94,9 +114,16 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     alignItems: "center",
   },
+  tempWrapper: {
+    flexDirection: "row",
+    width: "80%",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   temp: {
     marginTop: 55,
-    fontSize: 150,
+    marginBottom: 20,
+    fontSize: 125,
     fontWeight: "400",
     fontStyle: "italic",
   },
