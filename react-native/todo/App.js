@@ -1,15 +1,35 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+} from "react-native";
 import { theme } from "./colors";
 
 export default function App() {
   const [home, setHome] = useState(true);
   const toHome = () => setHome(true);
   const toOffice = () => setHome(false);
+  const [text, setText] = useState("");
+  const [toDos, setToDos] = useState({});
+  const onChangeText = (payload) => setText(payload);
+  const addToDo = () => {
+    if (text === "") {
+      return;
+    }
+    const newToDos = Object.assign({}, toDos, {
+      [Date.now()]: { text, home: home },
+    });
+    setToDos(newToDos);
+    setText("");
+  };
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <View style={styles.header}>
         <TouchableOpacity onPress={toHome}>
           <Text
@@ -32,6 +52,23 @@ export default function App() {
           </Text>
         </TouchableOpacity>
       </View>
+      <TextInput
+        returnKeyType="done"
+        onSubmitEditing={addToDo}
+        onChangeText={onChangeText}
+        value={text}
+        placeholder={home ? "Add a to do at home" : "Add a to do at office"}
+        style={styles.input}
+      />
+      <ScrollView>
+        {Object.keys(toDos).map((key) =>
+          toDos[key].home === home ? (
+            <View style={styles.toDo} key={key}>
+              <Text style={styles.toDoText}>{toDos[key].text}</Text>
+            </View>
+          ) : null
+        )}
+      </ScrollView>
     </View>
   );
 }
@@ -50,5 +87,25 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 40,
     fontWeight: "500",
+  },
+  input: {
+    backgroundColor: theme.inputBg,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+    marginVertical: 20,
+    fontSize: 18,
+  },
+  toDo: {
+    backgroundColor: theme.toDoBg,
+    marginBottom: 15,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  toDoText: {
+    color: theme.toDoText,
+    fontSize: 17,
+    fontWeight: "400",
   },
 });
