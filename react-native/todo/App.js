@@ -1,6 +1,9 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Fontisto } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
+  Alert,
   StyleSheet,
   Text,
   View,
@@ -10,6 +13,8 @@ import {
 } from "react-native";
 import { theme } from "./colors";
 
+const STORAGE_KEY = "@toDos";
+
 export default function App() {
   const [home, setHome] = useState(true);
   const toHome = () => setHome(true);
@@ -17,7 +22,29 @@ export default function App() {
   const [text, setText] = useState("");
   const [toDos, setToDos] = useState({});
   const onChangeText = (payload) => setText(payload);
-  const addToDo = () => {
+  const saveToDos = async (toSave) => {
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+  };
+  const loadToDos = async () => {
+    const str = await AsyncStorage.getItem(STORAGE_KEY);
+    setToDos(JSON.parse(str));
+  };
+  const deleteToDo = async (id) => {
+    Alert.alert("Delete to do", "Are you sure?", [
+      { text: "Cancel" },
+      {
+        text: "Sure",
+        style: "destructive",
+        onPress: async () => {
+          const newToDos = { ...toDos };
+          delete newToDos[id];
+          setToDos(newToDos);
+          await saveToDos(newToDos);
+        },
+      },
+    ]);
+  };
+  const addToDo = async () => {
     if (text === "") {
       return;
     }
@@ -25,8 +52,12 @@ export default function App() {
       [Date.now()]: { text, home: home },
     });
     setToDos(newToDos);
+    await saveToDos(newToDos);
     setText("");
   };
+  useEffect(() => {
+    loadToDos();
+  }, []);
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -65,6 +96,9 @@ export default function App() {
           toDos[key].home === home ? (
             <View style={styles.toDo} key={key}>
               <Text style={styles.toDoText}>{toDos[key].text}</Text>
+              <TouchableOpacity onPress={() => deleteToDo(key)}>
+                <Fontisto name="trash" size={20} color={theme.trashBtn} />
+              </TouchableOpacity>
             </View>
           ) : null
         )}
@@ -97,6 +131,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   toDo: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     backgroundColor: theme.toDoBg,
     marginBottom: 15,
     paddingVertical: 20,

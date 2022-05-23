@@ -5,4 +5,5 @@ export const theme = {
   toDoText: "#FFFFFF",
   activation: "#FFFFFF",
   deactivation: "#505050",
+  trashBtn: "#888888",
 };
