@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Fontisto } from "@expo/vector-icons";
+import { Fontisto, MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
 import {
@@ -49,11 +49,39 @@ export default function App() {
       return;
     }
     const newToDos = Object.assign({}, toDos, {
-      [Date.now()]: { text, home: home },
+      [Date.now()]: { text, home: home, complete: false, editable: false },
     });
     setToDos(newToDos);
     await saveToDos(newToDos);
     setText("");
+  };
+  const toggleCompleteToDo = async (key) => {
+    const newToDos = { ...toDos };
+    newToDos[key].complete = !toDos[key].complete;
+    setToDos(newToDos);
+    await saveToDos(newToDos);
+  };
+  const toggleEditableToDo = async (key) => {
+    if (toDos[key].complete) {
+      Alert.alert("Uncheck complete before edit");
+      return;
+    }
+    const newToDos = { ...toDos };
+    newToDos[key].editable = !toDos[key].editable;
+    setToDos(newToDos);
+    await saveToDos(newToDos);
+  };
+  const onSubmitEditing = async (key) => {
+    const newToDos = { ...toDos };
+    toDos[key].editable = false;
+    setToDos(newToDos);
+    await saveToDos(newToDos);
+  };
+  const onEditText = (key, text) => {
+    setToDos({
+      ...toDos,
+      [key]: { ...toDos[key], text },
+    });
   };
   useEffect(() => {
     loadToDos();
@@ -95,10 +123,62 @@ export default function App() {
         {Object.keys(toDos).map((key) =>
           toDos[key].home === home ? (
             <View style={styles.toDo} key={key}>
-              <Text style={styles.toDoText}>{toDos[key].text}</Text>
-              <TouchableOpacity onPress={() => deleteToDo(key)}>
-                <Fontisto name="trash" size={20} color={theme.trashBtn} />
-              </TouchableOpacity>
+              {toDos[key].editable ? (
+                <TextInput
+                  returnKeyType="done"
+                  onSubmitEditing={() => onSubmitEditing(key)}
+                  onChangeText={(text) => onEditText(key, text)}
+                  value={toDos[key].text}
+                  style={styles.toDoText}
+                />
+              ) : (
+                <Text
+                  style={{
+                    ...styles.toDoText,
+                    textDecorationLine: toDos[key].complete
+                      ? "line-through"
+                      : "none",
+                  }}
+                >
+                  {toDos[key].text}
+                </Text>
+              )}
+
+              <View style={styles.icon}>
+                <TouchableOpacity onPress={() => toggleCompleteToDo(key)}>
+                  {toDos[key].complete ? (
+                    <Fontisto
+                      name="checkbox-active"
+                      size={20}
+                      color={theme.icon}
+                    />
+                  ) : (
+                    <Fontisto
+                      name="checkbox-passive"
+                      size={20}
+                      color={theme.icon}
+                    />
+                  )}
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => toggleEditableToDo(key)}>
+                  {toDos[key].editable ? (
+                    <MaterialIcons
+                      name="mode-edit"
+                      size={20}
+                      color={theme.icon}
+                    />
+                  ) : (
+                    <MaterialIcons
+                      name="edit-off"
+                      size={20}
+                      color={theme.icon}
+                    />
+                  )}
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => deleteToDo(key)}>
+                  <Fontisto name="trash" size={20} color={theme.icon} />
+                </TouchableOpacity>
+              </View>
             </View>
           ) : null
         )}
@@ -144,5 +224,8 @@ const styles = StyleSheet.create({
     color: theme.toDoText,
     fontSize: 17,
     fontWeight: "400",
+  },
+  icon: {
+    flexDirection: "row",
   },
 });
