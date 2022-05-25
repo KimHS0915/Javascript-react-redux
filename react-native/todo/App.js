@@ -13,21 +13,44 @@ import {
 } from "react-native";
 import { theme } from "./colors";
 
-const STORAGE_KEY = "@toDos";
+const TODOS_KEY = "@toDos";
+const HOME_KEY = "@home";
 
 export default function App() {
   const [home, setHome] = useState(true);
-  const toHome = () => setHome(true);
-  const toOffice = () => setHome(false);
+  const toHome = async () => {
+    setHome(true);
+    await AsyncStorage.setItem(HOME_KEY, "true");
+  };
+  const toOffice = async () => {
+    setHome(false);
+    await AsyncStorage.setItem(HOME_KEY, "false");
+  };
+  const loadHome = async () => {
+    const str = await AsyncStorage.getItem(HOME_KEY);
+    if (str === "true") {
+      setHome(true);
+    } else {
+      setHome(false);
+    }
+  };
   const [text, setText] = useState("");
   const [toDos, setToDos] = useState({});
   const onChangeText = (payload) => setText(payload);
   const saveToDos = async (toSave) => {
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+    try {
+      await AsyncStorage.setItem(TODOS_KEY, JSON.stringify(toSave));
+    } catch (error) {
+      Alert.alert(error);
+    }
   };
   const loadToDos = async () => {
-    const str = await AsyncStorage.getItem(STORAGE_KEY);
-    setToDos(JSON.parse(str));
+    try {
+      const str = await AsyncStorage.getItem(TODOS_KEY);
+      setToDos(JSON.parse(str));
+    } catch (error) {
+      Alert.alert(error);
+    }
   };
   const deleteToDo = async (id) => {
     Alert.alert("Delete to do", "Are you sure?", [
@@ -84,6 +107,7 @@ export default function App() {
     });
   };
   useEffect(() => {
+    loadHome();
     loadToDos();
   }, []);
   return (
