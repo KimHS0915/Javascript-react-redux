@@ -4,7 +4,6 @@ import { actionCreators } from "../store";
 import ToDo from "../components/ToDo";
 
 const Home = ({ toDos, addToDo }) => {
-  console.log(toDos);
   const [text, setText] = useState("");
   const onChange = (event) => {
     setText(event.target.value);
