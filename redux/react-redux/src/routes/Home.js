@@ -9,6 +9,9 @@ const Home = ({ toDos, addToDo }) => {
     setText(event.target.value);
   };
   const onSubmit = (event) => {
+    if (!text) {
+      return;
+    }
     event.preventDefault();
     addToDo(text);
     setText("");
@@ -21,7 +24,7 @@ const Home = ({ toDos, addToDo }) => {
         <button>Add</button>
       </form>
       <ul>
-        {toDos.map((toDo) => (
+        {toDos.reducer.map((toDo) => (
           <ToDo {...toDo} key={toDo.id} />
         ))}
       </ul>

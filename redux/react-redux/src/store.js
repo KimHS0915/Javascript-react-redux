@@ -1,4 +1,7 @@
-import { createStore } from "redux";
+import { combineReducers, createStore } from "redux";
+import { persistStore } from "redux-persist";
+import persistReducer from "redux-persist/es/persistReducer";
+import storage from "redux-persist/lib/storage";
 
 const ADD = "ADD";
 const DELETE = "DELETE";
@@ -22,11 +25,18 @@ const reducer = (state = [], action) => {
   }
 };
 
-const store = createStore(reducer);
+const persistConfig = {
+  key: "toDo",
+  storage: storage,
+};
+
+const allReducer = combineReducers({ reducer });
+
+export const store = createStore(persistReducer(persistConfig, allReducer));
 
 export const actionCreators = {
   addToDo,
   deleteToDo,
 };
 
-export default store;
+export const persistor = persistStore(store);

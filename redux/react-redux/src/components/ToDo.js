@@ -6,7 +6,7 @@ const ToDo = ({ text, onBtnClick, id }) => {
   return (
     <li>
       <Link to={`/${id}`}>{text}</Link>
-      <button onClick={onBtnClick}>DEL</button>
+      <button onClick={onBtnClick}>Del</button>
     </li>
   );
 };
