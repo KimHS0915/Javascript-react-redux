@@ -1,7 +1,9 @@
 import { connect } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { actionCreators } from "../store";
 
-const Detail = ({ toDos }) => {
+const Detail = ({ toDos, onBtnClick }) => {
+  const navi = useNavigate();
   const id = useParams().id;
   const toDo = toDos.find((toDo) => toDo.id === parseInt(id));
   const created = new Date();
@@ -10,6 +12,15 @@ const Detail = ({ toDos }) => {
     <>
       <h1>{toDo?.text}</h1>
       <h5>Created at : {created.toString().slice(0, -18)}</h5>
+      <button onClick={() => navi("/")}>BACK</button>
+      <button
+        onClick={() => {
+          onBtnClick(parseInt(id));
+          navi("/");
+        }}
+      >
+        DEL
+      </button>
     </>
   );
 };
@@ -18,4 +29,10 @@ const mapStateToProps = (state) => {
   return { toDos: state };
 };
 
-export default connect(mapStateToProps)(Detail);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onBtnClick: (id) => dispatch(actionCreators.deleteToDo(id)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Detail);
