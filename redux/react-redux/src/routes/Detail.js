@@ -1,13 +1,16 @@
-import { connect } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { remove } from "../store";
 
-const Detail = ({ toDos, onBtnClick }) => {
+const Detail = () => {
+  const toDos = useSelector((state) => state);
+  const dispatch = useDispatch();
   const navi = useNavigate();
   const id = useParams().id;
   const toDo = toDos.reducer.find((toDo) => toDo.id === parseInt(id));
   const created = new Date();
   created.setTime(parseInt(id));
+  const onBtnClick = (id) => dispatch(remove(id));
   return (
     <>
       <h1>{toDo?.text}</h1>
@@ -25,14 +28,4 @@ const Detail = ({ toDos, onBtnClick }) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return { toDos: state };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onBtnClick: (id) => dispatch(remove(id)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Detail);
+export default Detail;
