@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { configureStore, createAction, createReducer } from "@reduxjs/toolkit";
+import { configureStore, createSlice } from "@reduxjs/toolkit";
 import {
   persistStore,
   persistReducer,
@@ -12,15 +12,16 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-const addToDo = createAction("ADD");
-const deleteToDo = createAction("DELETE");
-
-const reducer = createReducer([], {
-  [addToDo]: (state, action) => {
-    state.push({ text: action.payload, id: Date.now() });
+const toDos = createSlice({
+  name: "toDosReducer",
+  initialState: [],
+  reducers: {
+    add: (state, action) => {
+      state.push({ text: action.payload, id: Date.now() });
+    },
+    remove: (state, action) =>
+      state.filter((toDo) => toDo.id !== action.payload),
   },
-  [deleteToDo]: (state, action) =>
-    state.filter((toDo) => toDo.id !== action.payload),
 });
 
 const persistConfig = {
@@ -28,9 +29,9 @@ const persistConfig = {
   storage: storage,
 };
 
-const allReducer = combineReducers({ reducer });
+const allReducer = combineReducers({ reducer: toDos.reducer });
 const persistedReducer = persistReducer(persistConfig, allReducer);
-// export const store = createStore(persistReducer(persistConfig, allReducer));
+
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -41,9 +42,6 @@ export const store = configureStore({
     }),
 });
 
-export const actionCreators = {
-  addToDo,
-  deleteToDo,
-};
+export const { add, remove } = toDos.actions;
 
 export const persistor = persistStore(store);

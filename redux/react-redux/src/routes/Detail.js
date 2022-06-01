@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { actionCreators } from "../store";
+import { remove } from "../store";
 
 const Detail = ({ toDos, onBtnClick }) => {
   const navi = useNavigate();
@@ -31,7 +31,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onBtnClick: (id) => dispatch(actionCreators.deleteToDo(id)),
+    onBtnClick: (id) => dispatch(remove(id)),
   };
 };
 
